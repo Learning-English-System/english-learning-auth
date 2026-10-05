@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>EnglishLearning.Auth.Contracts</PackageId>
+    <Description>Contracts, DTOs, and Kafka events for Auth Service.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EnglishLearning.BuildingBlocks.Messaging" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

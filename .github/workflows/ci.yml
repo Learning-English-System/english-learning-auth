@@ -1,0 +1,23 @@
+name: CI - Auth Service
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+    - name: Restore dependencies
+      run: dotnet restore AuthService.slnx
+    - name: Build
+      run: dotnet build AuthService.slnx --no-restore -c Release
+    - name: Test
+      run: dotnet test AuthService.slnx --no-build -c Release

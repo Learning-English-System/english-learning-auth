@@ -40,53 +40,52 @@ public static class OpenIddictSeeder
             }
         }
 
-        const string webClientId = "english-learning-web";
-        var existingWeb = await appManager.FindByClientIdAsync(webClientId);
-        if (existingWeb == null)
+        string[] publicClientIds = ["english-learning-web", "spa-client"];
+        foreach (var clientId in publicClientIds)
         {
-            await appManager.CreateAsync(new OpenIddictApplicationDescriptor
+            var existingWeb = await appManager.FindByClientIdAsync(clientId);
+            if (existingWeb == null)
             {
-                ClientId = webClientId,
-                ClientType = ClientTypes.Public,
-                DisplayName = "English Learning Web Client",
-                RedirectUris =
+                await appManager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    new Uri("http://localhost:3000/callback"),
-                    new Uri("http://localhost:8080/callback")
-                },
-                PostLogoutRedirectUris =
-                {
-                    new Uri("http://localhost:3000/"),
-                    new Uri("http://localhost:8080/")
-                },
-                Permissions =
-                {
-                    Permissions.Endpoints.Authorization,
-                    Permissions.Endpoints.Token,
-                    Permissions.Endpoints.Revocation,
-                    Permissions.GrantTypes.AuthorizationCode,
-                    Permissions.GrantTypes.RefreshToken,
-                    Permissions.GrantTypes.Password,
-                    Permissions.ResponseTypes.Code,
-                    Permissions.Scopes.Email,
-                    Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + Scopes.OpenId,
-                    Permissions.Prefixes.Scope + Scopes.OfflineAccess,
-                    Permissions.Prefixes.Scope + "english-learning-api"
-                },
-                Requirements =
-                {
-                    Requirements.Features.ProofKeyForCodeExchange
-                }
-            });
-        }
-        else if (!await appManager.HasPermissionAsync(existingWeb, Permissions.GrantTypes.Password))
-        {
-            var descriptor = new OpenIddictApplicationDescriptor();
-            await appManager.PopulateAsync(descriptor, existingWeb);
-            descriptor.Permissions.Add(Permissions.GrantTypes.Password);
-            await appManager.UpdateAsync(existingWeb, descriptor);
+                    ClientId = clientId,
+                    ClientType = ClientTypes.Public,
+                    DisplayName = $"{clientId} Web Client",
+                    RedirectUris =
+                    {
+                        new Uri("http://localhost:3000/callback"),
+                        new Uri("http://localhost:8080/callback")
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        new Uri("http://localhost:3000/"),
+                        new Uri("http://localhost:8080/")
+                    },
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Token,
+                        Permissions.Endpoints.Revocation,
+                        Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.GrantTypes.Password,
+                        Permissions.ResponseTypes.Code,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + Scopes.OpenId,
+                        Permissions.Prefixes.Scope + Scopes.OfflineAccess,
+                        Permissions.Prefixes.Scope + "english-learning-api"
+                    }
+                });
+            }
+            else if (!await appManager.HasPermissionAsync(existingWeb, Permissions.GrantTypes.Password))
+            {
+                var descriptor = new OpenIddictApplicationDescriptor();
+                await appManager.PopulateAsync(descriptor, existingWeb);
+                descriptor.Permissions.Add(Permissions.GrantTypes.Password);
+                await appManager.UpdateAsync(existingWeb, descriptor);
+            }
         }
 
         // Seed Confidential service clients

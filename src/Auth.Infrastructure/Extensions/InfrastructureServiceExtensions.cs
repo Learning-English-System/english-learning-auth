@@ -84,8 +84,8 @@ public static class InfrastructureServiceExtensions
                 options.SetRefreshTokenLifetime(TimeSpan.FromDays(7));
                 options.SetAuthorizationCodeLifetime(TimeSpan.FromMinutes(5));
 
-                options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate();
+                options.AddEphemeralEncryptionKey()
+                       .AddEphemeralSigningKey();
 
                 options.UseAspNetCore()
                        .DisableTransportSecurityRequirement()
